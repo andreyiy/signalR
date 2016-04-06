@@ -1,0 +1,27 @@
+public string Register(StudentViewModel student)
+        {
+            try
+            {
+                if(ModelState.IsValid)
+                {
+                StudentService regViewModel = new StudentService();
+                regViewModel.AddStudent(student);
+                }
+            }
+            catch(Exception ex)
+            {
+                if (ex.Message == "An user with the same username or email already exists")
+                {
+                    return ex.Message;
+                }
+                return "All fields are required!";
+            }
+            return "success";
+        }
+
+
+$(document).ready(function () {
+            $('#dropList').change(function () {
+                
+            });
+        });

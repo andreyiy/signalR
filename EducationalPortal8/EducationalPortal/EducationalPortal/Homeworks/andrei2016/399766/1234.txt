@@ -1,0 +1,72 @@
+CREATE TABLE Admin
+(
+UserID int identity(1,1) not null,
+UserName nvarchar(100) not null,
+Password nvarchar(100) not null, 
+Email nvarchar(100) not null,
+RoleID nvarchar(20) not null,
+FirstName nvarchar(100) not null,
+LastName nvarchar(100) not null,
+HomeAddress	nvarchar(200),
+PhoneNumber nvarchar(20),
+constraint PK_User primary key (UserID),
+)
+
+CREATE TABLE Teacher(
+TeacherID int identity(1,1) not null,
+UserName nvarchar(100) not null,
+Password nvarchar(100) not null, 
+Email nvarchar(100) not null,
+RoleID nvarchar(20) not null,
+FirstName nvarchar(100) not null,
+LastName nvarchar(100) not null,
+HomeAddress	nvarchar(200),
+PhoneNumber nvarchar(20),
+constraint PK_Teacher primary key (TeacherID),
+)
+
+CREATE TABLE Student
+(
+StudentID int identity(1,1) not null,
+UserName nvarchar(100) not null,
+Password nvarchar(100) not null, 
+Email nvarchar(100) not null,
+RoleID nvarchar(20) not null,
+FirstName nvarchar(100) not null,
+LastName nvarchar(100) not null,
+HomeAddress	nvarchar(200),
+PhoneNumber nvarchar(20),
+TeacherID int,
+constraint Pk_Student primary key(StudentID),
+constraint Fk_Student_Teacher foreign key (TeacherID) references Teacher(TeacherID),
+)
+
+CREATE TABLE Status
+( StatusID int identity(1,1) not null,
+StatusName nvarchar(100),
+constraint Pk_Status primary key(StatusID)
+)
+
+CREATE table Homework
+(HomeworkID int identity(1,1) Not null,
+StartDate DATETIME not null,
+EndDate DATETIME not null,
+TeacherID int not null,
+constraint Pk_Homework primary key(HomeworkID),
+constraint Fk_Homework_Teacher foreign key (TeacherID) references Teacher(TeacherID)
+)
+
+CREATE TABLE StudentHomework(
+SHomeID int identity(1,1) not null,
+HomeworkID int not null,
+StatusID int not null,
+StudentID int not null,
+UploadedFiles NVARCHAR(200)
+constraint Pk_StudentHomework  primary key (SHomeID),
+constraint Fk_StudentHomework_Status foreign key (StatusID) references Status(StatusID),
+constraint Fk_StudentHomework_Student foreign key (StudentID) references Student(StudentID),
+constraint Fk_StudentHomework_Homework foreign key (HomeworkID) references Homework(HomeworkID),
+
+)
+
+
