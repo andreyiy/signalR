@@ -48,34 +48,56 @@
             <li>@Html.ActionLink("Sign Out", "Logout", "Account")</li>
             }
             <hr />
+            <div id="cPopup" class="circle"></div>
+            <hr />
         </ul>
     </div>
 
     <script type="text/javascript">
-        $("[id*=btnPopUp]").live("click", function () {
-            $("#dialog").dialog({
-                title: "jQuery Dialog Popup",
-                buttons: {
-                    Close: function () {
-                        $(this).dialog('close');
-                    }
-                }
+        $(function () {
+            // Declare a proxy to reference the hub.
+            var chat = $.connection.ChatHub;
+            var name = "andrei";
+            // Create a function that the hub can call to broadcast messages.
+            chat.client.broadcastMessage = function (name, message) {
+                // Html encode display name and message.
+                var encodedName = "andrei";
+                var encodedMsg = "my msg";
+                // Add the message to the page.
+                $('#textDiv').append('<strong>' + encodedName
+                    + '</strong>:&nbsp;&nbsp;' + encodedMsg);
+            };
+            // Start the connection.
+            $.connection.hub.start().done(function () {
+                $('#sendMsg').click(function () {
+                    // Call the Send method on the hub.
+                    chat.server.send(name, $('#msgVal').val());
+                    // Clear text box and reset focus for next comment.
+                    $('#msgVal').val('').focus();
+                });
             });
-            return false;
+        });
+    </script>
+    <script type="text/javascript">
+        $("[id*=cPopup]").on("click", function () {
+            $('#chatDiv').toggle();
         });
     </script>
 
 
-
     <div class="right">
-        <div id="dialog" style="display:none">
-            <textarea></textarea>
-            <input type="text" value="Enter your message" />
-            <button value="Send">Send</button>
+        <div id="chatDiv" style="font-size:13px;width:280px;background-color:white;text-align:center;display:none">
+            <div id="nameDiv" style="background-color:lightblue;color:black">
+                <label>Student</label>
+            </div>
+            <div id="textDiv" style="width:280px">
+                <textarea readonly="readonly" style="width:280px;height:150px;resize:none"></textarea>
+            </div>
+            <div id="msgDiv" style="display:compact">
+                <input type="text" value="Your message" id="msgVal" style="width:230px" />
+                <button id="sendMsg">Send</button>
+            </div>
         </div>
-
-        <button id="btnPopUp" value="Show Popup">PopUp</button>
-
         @RenderBody()
     </div>
     
